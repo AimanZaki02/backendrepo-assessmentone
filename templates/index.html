@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mashable Headlines</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: white;
+      color: black;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    a {
+      text-decoration: none;
+      color: black;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .article {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mashable Headlines</h1>
+  <div id="articles"></div>
+
+  <script>
+    async function fetchArticles() {
+      const response = await fetch('/api/scrape');
+      const articles = await response.json();
+
+      if (articles.error) {
+        document.getElementById('articles').innerHTML = `<p>Error: ${articles.error}</p>`;
+        return;
+      }
+
+      const container = document.getElementById('articles');
+      articles.forEach(article => {
+        const div = document.createElement('div');
+        div.className = 'article';
+        div.innerHTML = `
+          <a href="${article.link}" target="_blank">${article.title}</a><br>
+          <small>Published on: ${article.date}</small>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    fetchArticles();
+  </script>
+</body>
+</html>
